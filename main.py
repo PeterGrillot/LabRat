@@ -1,28 +1,49 @@
-#!/usr/bin/env python
-
-# Import Modules
+#!/usr/bin/env python3
 from tkinter import *
 import subprocess
-import shlex
 
-# Styles
+# Settings
 import settings
 
-root = Tk()
+class App:
+	def __init__(self, master):
+		frame = Frame(master)
+		frame.pack()
+		
+		# Greeting
+		self.label_welcome = Label(frame,
+			text='LabRat v0.0.2',
+			justify=LEFT)
+		self.label_welcome.pack(side="top", fill="both", expand=True)
+		
+		# Speed Slider
+		self.label_speed = Label(frame,
+			text='Set Mouse Speed',
+			justify=LEFT)
+		self.label_speed.pack(side="top", fill="both", expand=True)
+		self.scale_speed = Scale(frame,width=10, from_=0, to=10,orient=HORIZONTAL,resolution=0.1)
+		self.scale_speed.pack(padx=settings.padding,pady=settings.padding)
 
-# Instructions
-root.title('MouseTrap')
-Label(text='Set Mouse Speed \nUses GTK Setting, 0 = Faster <-> 10 = Slower',justify=LEFT).pack(side=TOP,padx=settings.padding,pady=settings.padding)
+		# Apply Button
+		self.apply = Button(frame, 
+			text="OK",
+			command=self.set_speed)
+		self.apply.pack(side="left")
 
-scale = Scale(root, from_=0, to=5,orient=HORIZONTAL,resolution=0.1)
-scale.pack(side=TOP,padx=settings.padding,pady=settings.padding)
+		self.close = Button(frame, 
+			text="Quit",
+			command=quit)
+		self.close.pack(side="right")
 
-# Get Mouse Settings from GUI
-def setMouse():
-		n = str(scale.get())
-		#subprocess.call(["echo",n]);
+	def set_speed(self):
+		n = str(self.scale_speed.get())
+		subprocess.call(["echo",n]);
 		subprocess.call(['xinput','--set-prop','15','Device Accel Constant Deceleration',n])
-Button(root, text='Ok', command=setMouse).pack(side=LEFT,padx=settings.padding,pady=settings.padding)
-Button(root, text="Close",command=root.destroy).pack(side=RIGHT,padx=settings.padding,pady=settings.padding)
+
+root = Tk()
+root.title('LabRat')
+root.geometry("300x200")
+
+app = App(root)
 
 root.mainloop()
