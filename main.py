@@ -10,6 +10,16 @@ class App:
 		frame = Frame(master)
 		frame.pack()
 		
+		# devices = subprocess.check_output(xinput --list | awk '/.*pointer/')
+		devices = ['mouse', 'mouse3']
+		for device in devices:
+			print(device)
+
+		var = StringVar(master)
+		var.set("Select Device")
+		option = OptionMenu(frame, var, *devices)
+		option.pack()
+
 		# Greeting
 		self.label_welcome = Label(frame,
 			text='LabRat v0.0.2',
