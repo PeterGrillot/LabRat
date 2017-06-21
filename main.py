@@ -5,19 +5,36 @@ import subprocess
 # Settings
 import settings
 
+class device(object):
+	id = 0
+
+	# The class "constructor" - It's actually an initializer 
+	def __init__(self, id):
+			self.id = id
+
+def make_device(id):
+		device_id = device(id)
+		return device_id
+
 class App:
 	def __init__(self, master):
 		frame = Frame(master)
 		frame.pack()
 		
-		# devices = subprocess.check_output(xinput --list | awk '/.*pointer/')
-		devices = ['mouse', 'mouse3']
-		for device in devices:
-			print(device)
-
+		devices = subprocess.check_output('xinput | awk -F= "/.*pointer/ {print \$2}" | cut -f1', shell=True).decode('ascii')
+		# xinput | awk -F= "/$pointer1.*pointer/ {print \$2}" | cut -f1
+		# xinput | awk -F= "/$pointer1.*pointer/ {print \$1}" | cut -f1
+		# devices = ['mouse', 'mouse3']
+		# for device in devices:
+		print(devices.split('\n'))
+		# devices = subprocess.check_output(xinput --list)
+		# for device in devicesz:
+		# 	t = make_device(device)
+		
+		# print(t.id)
 		var = StringVar(master)
 		var.set("Select Device")
-		option = OptionMenu(frame, var, *devices)
+		option = OptionMenu(frame, var, devices)
 		option.pack()
 
 		# Greeting
@@ -45,10 +62,13 @@ class App:
 			command=quit)
 		self.close.pack(side="right")
 
+
+
 	def set_speed(self):
 		n = str(self.scale_speed.get())
 		subprocess.call(["echo",n]);
 		subprocess.call(['xinput','--set-prop','15','Device Accel Constant Deceleration',n])
+	
 
 root = Tk()
 root.title('LabRat')
