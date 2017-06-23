@@ -13,26 +13,29 @@ class App:
 		frame = Frame(master)
 		frame.pack()
 		
+		# mouse_name = 'pointer:MOSART Semi. 2.4G Keyboard Mouse' 
+		# mouse_id = subprocess.check_output("xinput list --id-only 'pointer:MOSART Semi. 2.4G Keyboard Mouse'",shell=True).decode()
+		# print(mouse_id)
 		# Create List of Devices
-		names = subprocess.check_output(['xinput','list','--name-only'])
-		ids = subprocess.check_output(['xinput','list','--id-only'])
+		#names = subprocess.check_output(['xinput','list','--name-only'])
+		#ids = subprocess.check_output(['xinput','list','--id-only'])
 
-		names_list = names.decode().splitlines()
+		# names_list = names.decode().splitlines()
 
-		devices_array = []
+		# devices_array = []
 
 
-		for name in names_list:
-			arr = {}
-			arr['name'] = name
-			arr['id'] = subprocess.check_output(['xinput','list','--id-only',name]).decode().replace('\n','')
-			devices_array.append(arr)
+		# for name in names_list:
+		# 	arr = {}
+		# 	arr['name'] = name
+		# 	arr['id'] = subprocess.check_output(['xinput','list','--id-only',name]).decode().replace('\n','')
+		# 	devices_array.append(arr)
 		
 		# print(devices_array)
-		var = StringVar(master)
-		var.set('Select Device')
-		option = OptionMenu(frame, var, *devices_array,command=self.getit)
-		option.pack()
+		# var = StringVar(master)
+		# var.set('Select Device')
+		# option = OptionMenu(frame, var, *devices_array,command=self.getit)
+		# option.pack()
 
 		# Greeting
 		self.label_welcome = Label(frame,
@@ -45,7 +48,7 @@ class App:
 			text='Set Mouse Speed',
 			justify=LEFT)
 		self.label_speed.pack(side='top', fill='both', expand=True)
-		self.scale_speed = Scale(frame,width=10, from_=0, to=10,orient=HORIZONTAL,resolution=0.1)
+		self.scale_speed = Scale(frame,width=10, from_=0, length=290, to=10,orient=HORIZONTAL,resolution=0.1)
 		self.scale_speed.pack(padx=settings.padding,pady=settings.padding)
 
 		# Apply Button
@@ -59,16 +62,17 @@ class App:
 			command=quit)
 		self.close.pack(side='right')
 
-	def getit(self,florp):
-		global default_id
-		default_id = florp['id']
+	# def getit(self,florp):
+	# 	global default_id
+	# 	default_id = florp['id']
 		
 
 	def set_speed(self):
-		print(default_id)
+		t_id = subprocess.check_output("xinput list --id-only 'pointer:MOSART Semi. 2.4G Keyboard Mouse'",shell=True)
+		mouse_id = t_id.decode().replace('\n','')
 		n = str(self.scale_speed.get())
-		subprocess.call(['echo',n]);
-		subprocess.call(['xinput','--set-prop',default_id,'Device Accel Constant Deceleration',n])
+		# subprocess.call(['echo',n]);
+		subprocess.call(['xinput','--set-prop',str(mouse_id),'Device Accel Constant Deceleration',str(n)])
 	
 
 root = Tk()
